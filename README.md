@@ -34,3 +34,54 @@ Orchestrator can decide to change order of actions in chain, can decide to add n
 some steps from chain, etc. All these actions should not hit any of tasks, because task don't know anything about 
 who is sending data to task, or to who task is delivering data. That is completely dynamic.
 
+Okey, let's look some practical example of this architecture, using ``arch-orchestrator`` module.
+
+First let's define few tasks.
+
+```
+function add(next, arg) {
+  return next(arg + 10);
+}
+
+function substract(next, arg) {
+  return next(arg - 10);
+}
+
+function multiply(next, arg) {
+  return next(arg * 10);
+}
+
+function divide(next, arg) {
+  return next(arg / 10);
+}
+```
+
+Now we can define chain for out tasks. Orchestrator is responsable for that task.
+
+```
+var orchestrator = require('arch-orchestrator');
+
+function doMagic() {
+  return orchestrator()
+    .setNext(add)
+    .setNext(multiply)
+    .setNext(substract)
+    .setNext(divide)
+    .end();
+};
+```
+
+This chain is not very usefull, but it shows you idea of this approach. I belive you can see that you can easily 
+remove/add/change order of tasks in chain, wihout hitting actual task.
+
+And at the end some route handler should ask orchestrator for chain of methods.
+
+```
+function (req, res) {
+  var fn = doMagic();
+  console.log(fn(100));
+}
+```
+
+# License
+**MIT**
