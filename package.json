@@ -1,0 +1,32 @@
+{
+  "name": "arch-orchestrator",
+  "version": "0.0.0",
+  "description": "Orchestrator for large node.js applications",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "make"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ivpusic/arch-orchestrator.git"
+  },
+  "keywords": [
+    "orchestrator",
+    "node.js",
+    "large",
+    "application",
+    "architecture"
+  ],
+  "author": "Ivan Pusic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ivpusic/arch-orchestrator/issues"
+  },
+  "devDependencies": {
+    "mocha": "~1.19.0",
+    "should": "~3.3.2"
+  }
+}
