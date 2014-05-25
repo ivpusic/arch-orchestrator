@@ -1,7 +1,7 @@
 arch-orchestrator
 =================
 
-Orchestrator for large node.js applications
+Orchestrator architectural pattern for large node.js applications
 
 ## Motivation
 
@@ -19,15 +19,15 @@ Now let's clarify some parts of this architecture:
 - Function which knows which orchestrator method needs to call, in order to deliver requested resource.
 
 ##### Orchestrator
-- Object which contains funtions for delivering results to route handler. This object should know about each task.
-In order to deliver results to route handler, he needs to construct appropriate chain of tasks. 
-When all tasks are finished he should be able to deliver final results to route handler.
+- Object which know how to construct chain of tasks. This object should know about each task.
+In order to deliver chain (or direct results) to route handler, he needs to construct appropriate chain of tasks.
 
 ##### Task
 - Function which knows how to finish some specific task. Tasks don't know anything about each other.
 They have also small additional responsability. 
 When action on task is finished, task needs to call ``next`` function in order to deliver
-results to next part of task chain.
+results to next part of task chain. Next step will have some another responsability, and so on, until end of chain.
+When end of chain is reached, result will be available.
 
 So, central point of this system is orchestrator, and there is power of architecture this type.
 Orchestrator can decide to change order of actions in chain, can decide to add new steps to chain, can decide to remove
