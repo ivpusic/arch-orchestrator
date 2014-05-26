@@ -34,12 +34,49 @@ Orchestrator can decide to change order of actions in chain, can decide to add n
 some steps from chain, etc. All these actions should not hit any of tasks, because task don't know anything about 
 who is sending data to task, or to who task is delivering data. That is completely dynamic.
 
+## Example
+
 Okey, let's look some practical example of this architecture, using ``arch-orchestrator`` module.
+
+### Without orchestrator pattern
+
+Let' define few simple functions which do some actions in some order.
+
+```
+function add(next, arg) {
+  return multiply(arg + 10);
+}
+
+function substract(next, arg) {
+  return divide(arg - 10);
+}
+
+function multiply(next, arg) {
+  return substract(arg * 10);
+}
+
+function divide(next, arg) {
+  return arg / 10;
+}
+```
+
+I suppose this situation is familiar to you. This is really Tight coupled situation.
+If you want to change order of actions in this architecture, you will hit each
+function. Or imagine that you want to keep current order of actions, but you want
+to reuse functions in order (for example) divide -> add -> substract. 
+Hmmmm, yes, that can end with dirty code.
+
+### With orchestrator pattern
 
 First let's define few tasks.
 
 ```
+// each task accepts next as fist argument, 
+// and result from previous action as second argument.
 function add(next, arg) {
+  // each task need to call next function
+  // next function will call next part of chain, which is dynamic,
+  // and defined by orchestrator
   return next(arg + 10);
 }
 
@@ -56,7 +93,7 @@ function divide(next, arg) {
 }
 ```
 
-Now we can define chain for out tasks. Orchestrator is responsable for that task.
+Now we can define chain for out tasks. Orchestrator is responsable for that.
 
 ```
 var orchestrator = require('arch-orchestrator');
@@ -72,14 +109,24 @@ function doMagic() {
 ```
 
 This chain is not very usefull, but it shows you idea of this approach. I belive you can see that you can easily 
-remove/add/change order of tasks in chain, wihout hitting actual task.
+remove/add/change order of tasks in chain, wihout hitting actual task. So if you want to do that, you could simply say for example:
+
+```
+function doMagic() {
+  return orchestrator()
+    .setNext(divide)
+    .setNext(add)
+    .setNext(substract)
+    .end();
+};
+```
 
 And at the end some route handler should ask orchestrator for chain of methods.
 
 ```
 function (req, res) {
-  var fn = doMagic();
-  console.log(fn(100));
+  var chain = doMagic();
+  console.log(chain(100));
 }
 ```
 
