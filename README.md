@@ -1,6 +1,8 @@
 arch-orchestrator
 =================
 
+[![Build Status](https://travis-ci.org/ivpusic/arch-orchestrator.svg?branch=master)](https://travis-ci.org/ivpusic/arch-orchestrator)
+
 Orchestrator architectural pattern for large node.js applications
 
 ## Motivation
@@ -43,19 +45,19 @@ Okey, let's look some practical example of this architecture, using ``arch-orche
 Let' define few simple functions which do some actions in some order.
 
 ```
-function add(next, arg) {
+function add(arg) {
   return multiply(arg + 10);
 }
 
-function substract(next, arg) {
+function substract(arg) {
   return divide(arg - 10);
 }
 
-function multiply(next, arg) {
+function multiply(arg) {
   return substract(arg * 10);
 }
 
-function divide(next, arg) {
+function divide(arg) {
   return arg / 10;
 }
 ```
