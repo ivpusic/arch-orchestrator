@@ -1,6 +1,7 @@
 'use strict';
 
 require('co-mocha');
+var should = require('should');
 var orchestrator = require('..');
 
 function isFunction(fn) {
@@ -181,5 +182,73 @@ describe('arch-orchestrator', function () {
 
     res[0].should.be.exactly(14);
     res[1].should.be.exactly(26);
+  });
+
+  it('should be able to prepared arguments on normal functions', function () {
+    fn = orchestrator()
+      .setNext(fn1).tapTo(fn2)
+      .setNext(fn2)
+      .setNext(fn3)
+      .end();
+
+    var res = fn(5);
+    res.should.be.exactly(505);
+
+    // check if everything is cleaned
+    should.not.exist(fn1.__metadata__);
+    should.not.exist(fn2.__metadata__);
+    should.not.exist(fn3.__metadata__);
+  });
+
+  it('should be able to prepend arguments on generator chain functions', function * () {
+    fn = orchestrator()
+      .setNext(firstGen).tapTo(secondGen)
+      .setNext(secondGen)
+      .setNext(thirdGen)
+      .end();
+
+    var res = yield fn(5);
+    res.should.be.exactly(25);
+
+    should.not.exist(firstGen.__metadata__);
+    should.not.exist(secondGen.__metadata__);
+    should.not.exist(thirdGen.__metadata__);
+  });
+
+  it('should be able to use current result as final for normal chain functions', function () {
+    fn = orchestrator()
+      .setNext(fn1).asResult()
+      .setNext(fn2)
+      .setNext(fn3)
+      .end();
+
+    var res = fn(100);
+    res.should.be.exactly(200);
+    should.not.exist(fn1.__metadata__);
+    should.not.exist(fn2.__metadata__);
+    should.not.exist(fn3.__metadata__);
+  });
+
+  it('should be able to use current result as final for generator chain functions', function * () {
+    fn = orchestrator()
+      .setNext(firstGen).asResult()
+      .setNext(secondGen)
+      .setNext(thirdGen)
+      .end();
+
+    var res = yield fn(1);
+    res.should.be.exactly(2);
+
+    fn = orchestrator()
+      .setNext(firstGen)
+      .setNext(secondGen).asResult()
+      .setNext(thirdGen)
+      .end();
+
+    res = yield fn(1);
+    res.should.be.exactly(12);
+    should.not.exist(firstGen.__metadata__);
+    should.not.exist(secondGen.__metadata__);
+    should.not.exist(thirdGen.__metadata__);
   });
 });
