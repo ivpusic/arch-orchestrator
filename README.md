@@ -5,6 +5,12 @@ arch-orchestrator
 
 Orchestrator architectural pattern for large node.js applications
 
+## Installation
+
+```
+npm install arch-orchestrator
+```
+
 ## Motivation
 
 Managing architecture or big node.js applications can be challenging. With orchestrator approach you can improve
@@ -133,6 +139,54 @@ function (req, res) {
 ```
 
 **NOTE**: You can use generators as you chain parts. Your chain can consist of only generators, only of normal functions, or combination of generators and functions.
+
+## API
+
+#### setNext(Function)
+
+Method adds new function to chain. You can pass normal or generator function to chain.
+
+#### end()
+
+Method ends current chain, and compose chain of functions for you. All passed functions to setNext
+will be part of chain.
+
+#### asResult()
+
+If you want to use result of some specific chain step as final, you should mark that chain step with ``asResult``
+method.
+
+###### Example:
+```Javascript
+var fn = orchestrator()
+  .setNext(add)
+  .setNext(multiply).asResult()
+  .setNext(substract)
+  .setNext(divide)
+  .end();
+
+var result = fn(100)
+```
+
+In this case result will be returned from ``add`` and ``multiply`` methods. All other methods bellow will
+execute normally, but final result will be used from ``add`` and ``multiply`` methods.
+
+#### tapTo([Function...])
+With this method you can redirect arguments of some function which is part of chain to some other.
+
+###### Example:
+```Javascript
+var fn = orchestrator()
+  .setNext(add).tapTo(substract)
+  .setNext(multiply)
+  .setNext(substract)
+  .setNext(divide)
+  .end();
+```
+
+In this example you will execute ``add`` method normally, but you will also say that method ``substract`` will
+accept the same argument values as method ``add``. So method ``substract`` won't use passed values from ``multiply``,
+it will use the same arguments as ``add`` method.
 
 # License
 **MIT**
