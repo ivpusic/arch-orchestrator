@@ -1,6 +1,6 @@
 {
   "name": "arch-orchestrator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Orchestrator for large node.js applications",
   "main": "index.js",
   "directories": {
@@ -27,6 +27,11 @@
   },
   "devDependencies": {
     "mocha": "~1.19.0",
-    "should": "~3.3.2"
+    "should": "~3.3.2",
+    "co-mocha": "0.0.4"
+  },
+  "dependencies": {
+    "co": "~3.0.6",
+    "bluebird": "~1.2.4"
   }
 }

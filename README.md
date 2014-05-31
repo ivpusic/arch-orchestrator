@@ -26,14 +26,14 @@ In order to deliver chain (or direct results) to route handler, he needs to cons
 
 ##### Task
 - Function which knows how to finish some specific task. Tasks don't know anything about each other.
-They have also small additional responsability. 
+They have also small additional responsability.
 When action on task is finished, task needs to call ``next`` function in order to deliver
 results to next part of task chain. Next step will have some another responsability, and so on, until end of chain.
 When end of chain is reached, result will be available.
 
 So, central point of this system is orchestrator, and there is power of architecture this type.
 Orchestrator can decide to change order of actions in chain, can decide to add new steps to chain, can decide to remove
-some steps from chain, etc. All these actions should not hit any of tasks, because task don't know anything about 
+some steps from chain, etc. All these actions should not hit any of tasks, because task don't know anything about
 who is sending data to task, or to who task is delivering data. That is completely dynamic.
 
 ## Example
@@ -65,7 +65,7 @@ function divide(arg) {
 I suppose this situation is familiar to you. This is really Tight coupled situation.
 If you want to change order of actions in this architecture, you will hit each
 function. Or imagine that you want to keep current order of actions, but you want
-to reuse functions in order (for example) divide -> add -> substract. 
+to reuse functions in order (for example) divide -> add -> substract.
 Hmmmm, yes, that can end with dirty code.
 
 ### With orchestrator pattern
@@ -73,7 +73,7 @@ Hmmmm, yes, that can end with dirty code.
 First let's define few tasks.
 
 ```
-// each task accepts next as fist argument, 
+// each task accepts next as fist argument,
 // and result from previous action as second argument.
 function add(next, arg) {
   // each task need to call next function
@@ -110,7 +110,7 @@ function doMagic() {
 };
 ```
 
-This chain is not very usefull, but it shows you idea of this approach. I belive you can see that you can easily 
+This chain is not very usefull, but it shows you idea of this approach. I belive you can see that you can easily
 remove/add/change order of tasks in chain, wihout hitting actual task. So if you want to do that, you could simply say for example:
 
 ```
@@ -131,6 +131,8 @@ function (req, res) {
   console.log(chain(100));
 }
 ```
+
+**NOTE**: You can use generators as you chain parts. Your chain can consist of only generators, only of normal functions, or combination of generators and functions.
 
 # License
 **MIT**
