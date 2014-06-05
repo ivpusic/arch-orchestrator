@@ -177,9 +177,9 @@ describe('arch-orchestrator', function () {
     res[1].should.be.exactly(26);
   });
 
-  it('should be able to prepared arguments on normal functions', function () {
+  it('should be able to prepend arguments which are arguments of some other generator chain function', function () {
     fn = orchestrator()
-      .setNext(fn1).tapTo(fn2)
+      .setNext(fn1).argsTo(fn2)
       .setNext(fn2)
       .setNext(fn3)
       .end();
@@ -189,7 +189,7 @@ describe('arch-orchestrator', function () {
 
     // see if calls are independent
     fn = orchestrator()
-      .setNext(fn1).tapTo(fn2)
+      .setNext(fn1).argsTo(fn2)
       .setNext(fn2)
       .setNext(fn3)
       .end();
@@ -199,7 +199,7 @@ describe('arch-orchestrator', function () {
 
     // see if chain still works for other cases
     fn = orchestrator()
-      .setNext(fn1).tapTo(fn3)
+      .setNext(fn1).argsTo(fn3)
       .setNext(fn2)
       .setNext(fn3)
       .end();
@@ -208,14 +208,14 @@ describe('arch-orchestrator', function () {
     res.should.be.exactly(305);
 
     // check if everything is cleaned
-    should.not.exist(fn1.__metadata__);
-    should.not.exist(fn2.__metadata__);
-    should.not.exist(fn3.__metadata__);
+    should.not.exist(fn1.meta);
+    should.not.exist(fn2.meta);
+    should.not.exist(fn3.meta);
   });
 
-  it('should be able to prepend arguments on generator chain functions', function * () {
+  it('should be able to prepend arguments which are arguments of some other generator chain function', function * () {
     fn = orchestrator()
-      .setNext(firstGen).tapTo(secondGen)
+      .setNext(firstGen).argsTo(secondGen)
       .setNext(secondGen)
       .setNext(thirdGen)
       .end();
@@ -224,7 +224,7 @@ describe('arch-orchestrator', function () {
     res.should.be.exactly(25);
 
     fn = orchestrator()
-      .setNext(firstGen).tapTo(secondGen)
+      .setNext(firstGen).argsTo(secondGen)
       .setNext(secondGen)
       .setNext(thirdGen)
       .end();
@@ -233,7 +233,7 @@ describe('arch-orchestrator', function () {
     res.should.be.exactly(25);
 
     fn = orchestrator()
-      .setNext(firstGen).tapTo(thirdGen)
+      .setNext(firstGen).argsTo(thirdGen)
       .setNext(secondGen)
       .setNext(thirdGen)
       .end();
@@ -241,9 +241,35 @@ describe('arch-orchestrator', function () {
     res = yield fn(5);
     res.should.be.exactly(15);
 
-    should.not.exist(firstGen.__metadata__);
-    should.not.exist(secondGen.__metadata__);
-    should.not.exist(thirdGen.__metadata__);
+    should.not.exist(firstGen.meta);
+    should.not.exist(secondGen.meta);
+    should.not.exist(thirdGen.meta);
+  });
+
+  it('should be able to prepend arguments which are result of some function', function () {
+    fn = orchestrator()
+      .setNext(fn1).resultTo(fn3)
+      .setNext(fn2)
+      .setNext(fn3)
+      .end();
+
+    var res = fn(10);
+    res.should.be.exactly(410);
+  });
+
+  it('should be able to prepend arguments which are result of some generator function', function * () {
+    fn = orchestrator()
+      .setNext(firstGen).resultTo(thirdGen)
+      .setNext(secondGen)
+      .setNext(thirdGen)
+      .end();
+
+    var res = yield fn(10);
+
+    should.not.exist(firstGen.meta);
+    should.not.exist(secondGen.meta);
+    should.not.exist(thirdGen.meta);
+    res.should.be.exactly(21);
   });
 
   it('should be able to use current result as final for normal chain functions', function () {
@@ -265,9 +291,9 @@ describe('arch-orchestrator', function () {
     res = fn(200);
     res.should.be.exactly(300);
 
-    should.not.exist(fn1.__metadata__);
-    should.not.exist(fn2.__metadata__);
-    should.not.exist(fn3.__metadata__);
+    should.not.exist(fn1.meta);
+    should.not.exist(fn2.meta);
+    should.not.exist(fn3.meta);
   });
 
   it('should be able to use current result as final for generator chain functions', function * () {
@@ -289,8 +315,8 @@ describe('arch-orchestrator', function () {
     res = yield fn(1);
     res.should.be.exactly(12);
 
-    should.not.exist(firstGen.__metadata__);
-    should.not.exist(secondGen.__metadata__);
-    should.not.exist(thirdGen.__metadata__);
+    should.not.exist(firstGen.meta);
+    should.not.exist(secondGen.meta);
+    should.not.exist(thirdGen.meta);
   });
 });

@@ -171,13 +171,13 @@ var result = fn(100)
 In this case result will be returned from ``add`` and ``multiply`` methods. All other methods bellow will
 execute normally, but final result will be used from ``add`` and ``multiply`` methods.
 
-#### tapTo([Function...])
+#### argsTo([Function...])
 With this method you can redirect arguments of some function which is part of chain to some other.
 
 ###### Example:
 ```Javascript
 var fn = orchestrator()
-  .setNext(add).tapTo(substract)
+  .setNext(add).argsTo(substract)
   .setNext(multiply)
   .setNext(substract)
   .setNext(divide)
@@ -187,6 +187,19 @@ var fn = orchestrator()
 In this example you will execute ``add`` method normally, but you will also say that method ``substract`` will
 accept the same argument values as method ``add``. So method ``substract`` won't use passed values from ``multiply``,
 it will use the same arguments as ``add`` method.
+
+#### resultTo([Function...])
+With this method you set result of some chain function to be argument of some other chain function.
+
+###### Example:
+```Javascript
+var fn = orchestrator()
+  .setNext(add).resultTo(substract)
+  .setNext(multiply)
+  .setNext(substract)
+  .setNext(divide)
+  .end();
+```
 
 # License
 **MIT**
