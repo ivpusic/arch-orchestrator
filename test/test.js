@@ -22,7 +22,7 @@ function fn3(arg) {
 }
 
 function fn4(arg1, arg2) {
-  return arg1 + arg2 + 10;1
+  return arg1 + arg2 + 10;
 }
 
 function first() {
@@ -309,6 +309,21 @@ describe('arch-orchestrator', function () {
 
     var res = fn(10);
     res.should.be.exactly(730);
+  });
+
+  it('should not cache results of previous calls', function () {
+    fn = orchestrator()
+      .setNext(fn1).resultTo(fn4)
+      .setNext(fn2)
+      .setNext(fn3).resultTo(fn4)
+      .setNext(fn4)
+      .end();
+
+    var res = fn(10);
+    res.should.be.exactly(730);
+
+    res = fn(20);
+    res.should.be.exactly(750);
   });
 
   it('should be able to prepend arguments which are result of some generator function', function * () {
