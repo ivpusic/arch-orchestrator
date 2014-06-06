@@ -14,15 +14,15 @@ function fn1(arg) {
 }
 
 function fn2(arg) {
-  return (arg + 200);
+  return arg + 200;
 }
 
 function fn3(arg) {
-  return (arg + 300);
+  return arg + 300;
 }
 
 function fn4(arg1, arg2) {
-  return (arg1 + arg2 + 10);
+  return arg1 + arg2 + 10;1
 }
 
 function first() {
