@@ -9,58 +9,66 @@ function isFunction(fn) {
   return fn && getType.toString.call(fn) === '[object Function]';
 }
 
-function fn1(next, arg) {
-  return next(arg + 100);
+function fn1(arg) {
+  return (arg + 100);
 }
 
-function fn2(next, arg) {
-  return next(arg + 200);
+function fn2(arg) {
+  return (arg + 200);
 }
 
-function fn3(next, arg) {
-  return next(arg + 300);
+function fn3(arg) {
+  return (arg + 300);
 }
 
-function fn4(next, arg1, arg2) {
-  return next(arg1 + arg2 + 10);
+function fn4(arg1, arg2) {
+  return (arg1 + arg2 + 10);
 }
 
-function first(next) {
-  return next('first');
+function first() {
+  return 'first';
 }
 
-function second(next) {
-  return next('second');
+function second() {
+  return 'second';
 }
 
-function third(next) {
-  return next('third');
+function third() {
+  return 'third';
 }
 
-function * firstGen(next, arg) {
-  return next(arg + 1);
+function * firstGen(arg) {
+  return arg + 1;
 }
 
-function * secondGen(next, arg) {
-  return next(arg + 10);
+function * secondGen(arg) {
+  return arg + 10;
 }
 
-function * thirdGen(next, arg) {
-  return next(arg + 10);
+function * thirdGen(arg) {
+  return (arg + 10);
 }
 
-function fnMultipleArgs1(next, arg1, arg2) {
+function fnMultipleArgs1(arg1, arg2) {
   arg1 += 1;
   arg2 += 2;
 
-  return next(arg1, arg2);
+  return arg1 + arg2;
 }
 
-function fnMultipleArgs2(next, arg1, arg2) {
-  arg1 += 3;
-  arg2 += 4;
+function fnMultipleArgs2(sum) {
+  sum += 3;
 
-  return next(arg1, arg2);
+  return sum;
+}
+
+function fnArray(arg) {
+  return [arg, arg];
+}
+
+function fnExpectArray(arg) {
+  console.log(Array.isArray(arg));
+  return arg;
 }
 
 describe('arch-orchestrator', function () {
@@ -76,7 +84,26 @@ describe('arch-orchestrator', function () {
     isFunction(fn).should.be.ok;
   });
 
+  it('should receive array if array is passed as result', function () {
+    fn = orchestrator()
+      .setNext(fnArray)
+      .setNext(fnExpectArray)
+      .end();
+
+    var res = fn(5);
+
+    res[0].should.be.exactly(5);
+    res[1].should.be.exactly(5);
+    (Array.isArray(res)).should.be.ok;
+  });
+
   it('should be able to use result from multiple functions', function () {
+    fn = orchestrator()
+      .setNext(fn1)
+      .setNext(fn2)
+      .setNext(fn3)
+      .end();
+
     var res = fn(0);
     res.should.be.exactly(600);
   });
@@ -175,10 +202,9 @@ describe('arch-orchestrator', function () {
       .setNext(fnMultipleArgs2)
       .end();
 
-    var res = fn(10, 20);
+    var res = fn(1, 1);
 
-    res[0].should.be.exactly(14);
-    res[1].should.be.exactly(26);
+    res.should.be.exactly(8);
   });
 
   it('should be able to prepend arguments which are arguments of some other generator chain function', function () {

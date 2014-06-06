@@ -36,6 +36,7 @@ They have also small additional responsability.
 When action on task is finished, task needs to call ``next`` function in order to deliver
 results to next part of task chain. Next step will have some another responsability, and so on, until end of chain.
 When end of chain is reached, result will be available.
+**Note that if you use ``arch-orchestrator`` next function will be called automatically for you.**
 
 So, central point of this system is orchestrator, and there is power of architecture this type.
 Orchestrator can decide to change order of actions in chain, can decide to add new steps to chain, can decide to remove
@@ -79,25 +80,25 @@ Hmmmm, yes, that can end with dirty code.
 First let's define few tasks.
 
 ```
-// each task accepts next as fist argument,
-// and result from previous action as second argument.
-function add(next, arg) {
+// each task accepts result(s) from previous action(s).
+function add(arg) {
   // each task need to call next function
   // next function will call next part of chain, which is dynamic,
   // and defined by orchestrator
-  return next(arg + 10);
+  // here ``arch-orchestrator`` is calling ``next`` function for us,
+  return arg + 10;
 }
 
-function substract(next, arg) {
-  return next(arg - 10);
+function substract(arg) {
+  return arg - 10;
 }
 
-function multiply(next, arg) {
-  return next(arg * 10);
+function multiply(arg) {
+  return arg * 10;
 }
 
-function divide(next, arg) {
-  return next(arg / 10);
+function divide(arg) {
+  return arg / 10;
 }
 ```
 
@@ -217,7 +218,7 @@ In this case arguments on ``fn4`` will be available in order as functions ``args
 so ``fn4`` can look like:
 
 ```Javascript
-function fn4(next, argFromArgsTo, argFromResultTo) {
+function fn4(argFromArgsTo, argFromResultTo) {
   // do something awesome
 }
 ```
