@@ -21,6 +21,10 @@ function fn3(next, arg) {
   return next(arg + 300);
 }
 
+function fn4(next, arg1, arg2) {
+  return next(arg1 + arg2 + 10);
+}
+
 function first(next) {
   return next('first');
 }
@@ -213,6 +217,18 @@ describe('arch-orchestrator', function () {
     should.not.exist(fn3.meta);
   });
 
+  it('should be able to prepend arguments which are arguments of some other generator chain function calling argsTo multiple times', function () {
+    fn = orchestrator()
+      .setNext(fn1).argsTo(fn4)
+      .setNext(fn2).argsTo(fn4)
+      .setNext(fn3)
+      .setNext(fn4)
+      .end();
+
+    var res = fn(5);
+    res.should.be.exactly(120);
+  });
+
   it('should be able to prepend arguments which are arguments of some other generator chain function', function * () {
     fn = orchestrator()
       .setNext(firstGen).argsTo(secondGen)
@@ -257,6 +273,18 @@ describe('arch-orchestrator', function () {
     res.should.be.exactly(410);
   });
 
+  it('should be able to prepend arguments which are result of some function multiple times', function () {
+    fn = orchestrator()
+      .setNext(fn1).resultTo(fn4)
+      .setNext(fn2)
+      .setNext(fn3).resultTo(fn4)
+      .setNext(fn4)
+      .end();
+
+    var res = fn(10);
+    res.should.be.exactly(730);
+  });
+
   it('should be able to prepend arguments which are result of some generator function', function * () {
     fn = orchestrator()
       .setNext(firstGen).resultTo(thirdGen)
@@ -270,6 +298,18 @@ describe('arch-orchestrator', function () {
     should.not.exist(secondGen.meta);
     should.not.exist(thirdGen.meta);
     res.should.be.exactly(21);
+  });
+
+  it('should be able to combine argsTo and resultTo calls', function () {
+    fn = orchestrator()
+      .setNext(fn1).argsTo(fn4)
+      .setNext(fn2).resultTo(fn4)
+      .setNext(fn3)
+      .setNext(fn4)
+      .end();
+
+    var res = fn(5);
+    res.should.be.exactly(320);
   });
 
   it('should be able to use current result as final for normal chain functions', function () {

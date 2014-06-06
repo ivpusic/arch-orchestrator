@@ -201,5 +201,26 @@ var fn = orchestrator()
   .end();
 ```
 
+You can call ``resultTo`` and ``argsTo`` multiple times, or even combine them.
+
+##### Example:
+```Javascript
+var fn = orchestrator()
+  .setNext(fn1).argsTo(fn4)
+  .setNext(fn2).resultTo(fn4)
+  .setNext(fn3)
+  .setNext(fn4)
+  .end();
+```
+
+In this case arguments on ``fn4`` will be available in order as functions ``argsTo`` and ``resultTo`` are called,
+so ``fn4`` can look like:
+
+```Javascript
+function fn4(next, argFromArgsTo, argFromResultTo) {
+  // do something awesome
+}
+```
+
 # License
 **MIT**
