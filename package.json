@@ -1,6 +1,6 @@
 {
   "name": "arch-orchestrator",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Orchestrator for large node.js applications",
   "main": "index.js",
   "directories": {
