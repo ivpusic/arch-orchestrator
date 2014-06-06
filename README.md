@@ -69,7 +69,7 @@ function divide(arg) {
 }
 ```
 
-I suppose this situation is familiar to you. This is really Tight coupled situation.
+I suppose this situation is familiar to you. This is really tightly coupled situation.
 If you want to change order of actions in this architecture, you will hit each
 function. Or imagine that you want to keep current order of actions, but you want
 to reuse functions in order (for example) divide -> add -> substract.
