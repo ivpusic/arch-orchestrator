@@ -223,8 +223,8 @@ function fn4(argFromArgsTo, argFromResultTo) {
 }
 ```
 
-## Breaking chain
-If some point you will maybe want to be able to break chain. So instead of downstreaming result, you will want to return from chain immediately.
+#### Breaking chain
+At some point you will maybe want to be able to break chain. So instead of downstreaming result, you will want to return from chain immediately.
 In that case you just need return ``object`` from some chain function.
 
 That object should have at least ``breakChain`` property with ``true`` value.
