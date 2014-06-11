@@ -25,6 +25,13 @@ function fn4(arg1, arg2) {
   return arg1 + arg2 + 10;
 }
 
+function fnBreak() {
+  return {
+    breakChain: true,
+    additionalMessage: 'some message'
+  };
+}
+
 function first() {
   return 'first';
 }
@@ -399,5 +406,18 @@ describe('arch-orchestrator', function () {
     should.not.exist(firstGen.meta);
     should.not.exist(secondGen.meta);
     should.not.exist(thirdGen.meta);
+  });
+
+  it('should allow user to break chain', function() {
+    fn = orchestrator()
+      .setNext(fn1)
+      .setNext(fnBreak)
+      .setNext(fn2)
+      .setNext(fn3)
+      .end();
+
+    var res = fn(1);
+    res.breakChain.should.be.ok;
+    res.additionalMessage.should.be.ok;
   });
 });

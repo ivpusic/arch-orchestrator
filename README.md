@@ -223,5 +223,25 @@ function fn4(argFromArgsTo, argFromResultTo) {
 }
 ```
 
+## Breaking chain
+If some point you will maybe want to be able to break chain. So instead of downstreaming result, you will want to return from chain immediately.
+In that case you just need return ``object`` from some chain function.
+
+That object should have at least ``breakChain`` property with ``true`` value.
+```Javascript
+return {
+  breakChain: true
+}
+```
+
+You can also add some additional fields, so you can consume retuned additional fields, for example:
+
+```Javascript
+return {
+  breakChain: true,
+  message: 'this is some message which explains reason of chain break'
+}
+```
+
 # License
 **MIT**
