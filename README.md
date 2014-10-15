@@ -23,12 +23,12 @@ Now let's clarify some parts of this architecture:
 
 ### Participants
 
-##### Route handler
+##### Handler
 - Function which knows which orchestrator method needs to call, in order to deliver requested resource.
 
 ##### Orchestrator
 - Object which know how to construct chain of tasks. This object should know about each task.
-In order to deliver chain (or direct results) to route handler, he needs to construct appropriate chain of tasks.
+In order to deliver chain to handler, he needs to construct appropriate chain of tasks.
 
 ##### Task
 - Function which knows how to finish some specific task. Tasks don't know anything about each other.
@@ -130,7 +130,7 @@ function doMagic() {
 };
 ```
 
-And at the end some route handler should ask orchestrator for chain of methods.
+And at the end some handler should ask orchestrator for chain of methods.
 
 ```
 function (req, res) {
