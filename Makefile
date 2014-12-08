@@ -1,11 +1,7 @@
 NODE ?= node
+NPM ?= npm
 
 test:
-	@$(NODE) ./node_modules/.bin/mocha \
-		--require should \
-		--reporter spec \
-		--slow 2s \
-		--harmony-generators \
-		--bail
+	@$(NPM) test
 
 .PHONY: test
