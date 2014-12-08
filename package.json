@@ -25,13 +25,12 @@
   "bugs": {
     "url": "https://github.com/ivpusic/arch-orchestrator/issues"
   },
-  "devDependencies": {
-    "mocha": "~1.19.0",
-    "should": "~3.3.2",
-    "co-mocha": "0.0.4"
-  },
   "dependencies": {
-    "co": "~3.0.6",
-    "bluebird": "~1.2.4"
+    "co": "^4.0.1"
+  },
+  "devDependencies": {
+    "co-mocha": "^1.1.0",
+    "mocha": "^2.0.1",
+    "should": "^4.3.0"
   }
 }
